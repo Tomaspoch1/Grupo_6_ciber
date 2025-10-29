@@ -3,6 +3,34 @@ import './App.css'
 
 function App() {
   const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('') // para mostrar confirmación o error
+
+  // === función que envía el correo al backend Flask ===
+  const handleSubmit = async () => {
+    if (!email) {
+      setMessage('⚠️ Ingresa un correo antes de continuar')
+      return
+    }
+
+    try {
+      const response = await fetch('http://localhost:5050/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }) // envía el correo al backend
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setMessage(`✅ Guardado con ID ${data.id}`)
+      } else {
+        setMessage(`❌ Error: ${data.error || 'No se pudo guardar'}`)
+      }
+    } catch (error) {
+      console.error('Error al conectar con el backend:', error)
+      setMessage('❌ Error de conexión con el servidor')
+    }
+  }
 
   return (
     <div className="app-container">
@@ -51,8 +79,16 @@ function App() {
 
         <div className="dialog-footer">
           <a href="#" className="create-account-link">Crear cuenta</a>
-          <button className="next-btn">Siguiente</button>
+          {/* 🔹 botón que envía el email al backend */}
+          <button className="next-btn" onClick={handleSubmit}>Siguiente</button>
         </div>
+
+        {/* 🔹 mensaje de confirmación */}
+        {message && (
+          <p style={{ textAlign: 'center', marginTop: '15px', color: 'white' }}>
+            {message}
+          </p>
+        )}
       </div>
 
       <div className="page-footer">
