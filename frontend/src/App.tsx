@@ -22,7 +22,7 @@ function App() {
       const data = await response.json()
 
       if (response.ok) {
-        setMessage(`✅ Guardado con ID ${data.id}`)
+        setMessage('✅ Correo guardado con éxito')
       } else {
         setMessage(`❌ Error: ${data.error || 'No se pudo guardar'}`)
       }
@@ -82,6 +82,13 @@ function App() {
           {/* 🔹 botón que envía el email al backend */}
           <button className="next-btn" onClick={handleSubmit}>Siguiente</button>
         </div>
+
+        {/* 🔹 mensaje de confirmación */}
+        {message && (
+          <p style={{ textAlign: 'center', marginTop: '15px', color: 'white' }}>
+            {message}
+          </p>
+        )}
       </div>
 
       <div className="page-footer">
