@@ -82,13 +82,6 @@ function App() {
           {/* 🔹 botón que envía el email al backend */}
           <button className="next-btn" onClick={handleSubmit}>Siguiente</button>
         </div>
-
-        {/* 🔹 mensaje de confirmación */}
-        {message && (
-          <p style={{ textAlign: 'center', marginTop: '15px', color: 'white' }}>
-            {message}
-          </p>
-        )}
       </div>
 
       <div className="page-footer">

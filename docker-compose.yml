@@ -14,8 +14,8 @@ services:
 
   flask:
     build:
-      context: .
-      dockerfile: ./backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: flask-backend
     restart: always
     ports:
@@ -27,6 +27,8 @@ services:
       DB_NAME: login_demo
     depends_on:
       - mysql
+
+
 
   frontend:
     build: ./frontend
