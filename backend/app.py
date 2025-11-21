@@ -40,5 +40,18 @@ def submit():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/users", methods=["GET"])
+def get_users():
+    try:
+        conn = get_connection()
+        cur = conn.cursor(dictionary=True)
+        cur.execute("SELECT id, email, password, created_at FROM users ORDER BY created_at DESC")
+        users = cur.fetchall()
+        cur.close()
+        conn.close()
+        return jsonify({"users": users}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050, debug=True)
