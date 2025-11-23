@@ -10,6 +10,8 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_USER = os.getenv("DB_USER", "root")
 DB_PASS = os.getenv("DB_PASS", "1234")
 DB_NAME = os.getenv("DB_NAME", "login_demo")
+DB_PORT = int(os.getenv("DB_PORT", 3306))
+
 
 def get_connection():
     return mysql.connector.connect(
@@ -17,6 +19,7 @@ def get_connection():
         user=DB_USER,
         password=DB_PASS,
         database=DB_NAME,
+        port=DB_PORT,
         autocommit=True
     )
 
