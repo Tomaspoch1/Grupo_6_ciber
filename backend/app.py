@@ -54,6 +54,7 @@ def get_users():
         conn.close()
         return jsonify({"users": users}), 200
     except Exception as e:
+        print("ERROR REAL >>>", e)  # 👈 importante
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
