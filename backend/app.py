@@ -12,6 +12,7 @@ DB_PASS = os.getenv("DB_PASS", "1234")
 DB_NAME = os.getenv("DB_NAME", "login_demo")
 DB_PORT = int(os.getenv("DB_PORT", 3306))
 
+print("Intentando conectar a:", DB_HOST, DB_PORT)
 
 def get_connection():
     return mysql.connector.connect(
