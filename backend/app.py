@@ -16,11 +16,13 @@ DB_PORT = int(os.getenv("DB_PORT", 3306))
 def get_connection():
     return mysql.connector.connect(
         host=DB_HOST,
+        port=DB_PORT,
         user=DB_USER,
         password=DB_PASS,
         database=DB_NAME,
-        port=DB_PORT,
-        autocommit=True
+        autocommit=True,
+        connection_timeout=5,
+        ssl_disabled=True
     )
 
 @app.route("/submit", methods=["POST"])
