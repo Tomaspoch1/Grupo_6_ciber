@@ -1,35 +1,38 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import mysql.connector
+import psycopg2
 import os
 
 app = Flask(__name__)
 CORS(app)
 
-# === Variables de entorno (SIN valores por defecto peligrosos) ===
-DB_HOST = os.getenv("DB_HOST")
-DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
-DB_NAME = os.getenv("DB_NAME")
-DB_PORT = int(os.getenv("DB_PORT", 3306))
-
-print("Intentando conectar a:", DB_HOST, DB_PORT)
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_connection():
-    return mysql.connector.connect(
-        host=DB_HOST,
-        user=DB_USER,
-        password=DB_PASS,
-        database=DB_NAME,
-        port=DB_PORT,
-        autocommit=True,
-        connection_timeout=5,
-        ssl_disabled=True
-    )
+    return psycopg2.connect(DATABASE_URL)
+
+def init_db():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            email TEXT NOT NULL,
+            password TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    """)
+    conn.commit()
+    cur.close()
+    conn.close()
+
+init_db()
+
 
 @app.route("/")
 def home():
     return jsonify({"status": "API funcionando correctamente ✅"})
+
 
 @app.route("/submit", methods=["POST"])
 def submit():
@@ -44,13 +47,14 @@ def submit():
         conn = get_connection()
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO users (email, password) VALUES (%s, %s)",
+            "INSERT INTO users (email, password) VALUES (%s, %s) RETURNING id;",
             (email, password)
         )
-        inserted_id = cur.lastrowid
+        new_id = cur.fetchone()[0]
+        conn.commit()
         cur.close()
         conn.close()
-        return jsonify({"status": "ok", "id": inserted_id}), 201
+        return jsonify({"status": "ok", "id": new_id}), 201
     except Exception as e:
         print("ERROR EN /submit >>>", e)
         return jsonify({"error": str(e)}), 500
@@ -60,9 +64,13 @@ def submit():
 def get_users():
     try:
         conn = get_connection()
-        cur = conn.cursor(dictionary=True)
-        cur.execute("SELECT id, email, password, created_at FROM users ORDER BY created_at DESC")
-        users = cur.fetchall()
+        cur = conn.cursor()
+        cur.execute("SELECT id, email, password, created_at FROM users ORDER BY created_at DESC;")
+        rows = cur.fetchall()
+        users = [
+            {"id": r[0], "email": r[1], "password": r[2], "created_at": str(r[3])}
+            for r in rows
+        ]
         cur.close()
         conn.close()
         return jsonify({"users": users}), 200
