@@ -6,23 +6,30 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASS = os.getenv("DB_PASS", "1234")
-DB_NAME = os.getenv("DB_NAME", "login_demo")
+# === Variables de entorno (SIN valores por defecto peligrosos) ===
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
+DB_NAME = os.getenv("DB_NAME")
 DB_PORT = int(os.getenv("DB_PORT", 3306))
 
 print("Intentando conectar a:", DB_HOST, DB_PORT)
 
 def get_connection():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASS"),
-        database=os.getenv("DB_NAME"),
-        port=int(os.getenv("DB_PORT")),
-        connection_timeout=5
+        host=DB_HOST,
+        user=DB_USER,
+        password=DB_PASS,
+        database=DB_NAME,
+        port=DB_PORT,
+        autocommit=True,
+        connection_timeout=5,
+        ssl_disabled=True
     )
+
+@app.route("/")
+def home():
+    return jsonify({"status": "API funcionando correctamente ✅"})
 
 @app.route("/submit", methods=["POST"])
 def submit():
@@ -36,13 +43,18 @@ def submit():
     try:
         conn = get_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, password))
+        cur.execute(
+            "INSERT INTO users (email, password) VALUES (%s, %s)",
+            (email, password)
+        )
         inserted_id = cur.lastrowid
         cur.close()
         conn.close()
         return jsonify({"status": "ok", "id": inserted_id}), 201
     except Exception as e:
+        print("ERROR EN /submit >>>", e)
         return jsonify({"error": str(e)}), 500
+
 
 @app.route("/users", methods=["GET"])
 def get_users():
@@ -55,10 +67,10 @@ def get_users():
         conn.close()
         return jsonify({"users": users}), 200
     except Exception as e:
-        print("ERROR REAL >>>", e)  # 👈 importante
+        print("ERROR EN /users >>>", e)
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5050))
     app.run(host="0.0.0.0", port=port)
-
