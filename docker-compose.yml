@@ -1,17 +1,4 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-demo
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: login_demo
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
-
   flask:
     build:
       context: ./backend
@@ -20,15 +7,8 @@ services:
     restart: always
     ports:
       - "5050:5050"
-    environment:
-      DB_HOST: mysql
-      DB_USER: root
-      DB_PASS: 1234
-      DB_NAME: login_demo
-    depends_on:
-      - mysql
-
-
+    environment:  
+      DATABASE_URL: ${DATABASE_URL}
 
   frontend:
     build: ./frontend
@@ -38,6 +18,3 @@ services:
       - "5173:5173"
     depends_on:
       - flask
-
-volumes:
-  mysql_data:
