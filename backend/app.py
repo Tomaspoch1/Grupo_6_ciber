@@ -16,14 +16,12 @@ print("Intentando conectar a:", DB_HOST, DB_PORT)
 
 def get_connection():
     return mysql.connector.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        user=DB_USER,
-        password=DB_PASS,
-        database=DB_NAME,
-        autocommit=True,
-        connection_timeout=5,
-        ssl_disabled=True
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASS"),
+        database=os.getenv("DB_NAME"),
+        port=int(os.getenv("DB_PORT")),
+        connection_timeout=5
     )
 
 @app.route("/submit", methods=["POST"])
