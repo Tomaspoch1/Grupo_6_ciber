@@ -8,6 +8,9 @@ interface User {
   created_at: string
 }
 
+const API_URL = "https://grupo-6-ciber-backend.onrender.com"
+
+
 function App() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -36,7 +39,7 @@ function App() {
 
     // En escritorio, envía al backend
     try {
-      const response = await fetch('http://localhost:5050/submit', {
+      const response = await fetch(`${API_URL}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }) // envía el correo al backend
@@ -64,7 +67,7 @@ function App() {
 
     // Enviar datos al backend antes de redirigir
     try {
-      const response = await fetch('http://localhost:5050/submit', {
+      const response = await fetch(`${API_URL}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -86,7 +89,7 @@ function App() {
     if (adminKey === 'pw123') {
       // Cargar usuarios desde el backend
       try {
-        const response = await fetch('http://localhost:5050/users')
+        const response = await fetch(`${API_URL}/users`)
         const data = await response.json()
         if (response.ok) {
           setUsers(data.users || [])
