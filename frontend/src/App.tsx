@@ -8,7 +8,7 @@ interface User {
   created_at: string
 }
 
-const API_URL = "https://grupo-6-ciber-backend.onrender.com"
+const API_URL = import.meta.env.VITE_API_URL
 
 
 function App() {
