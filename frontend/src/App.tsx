@@ -123,7 +123,7 @@ function App() {
         <div className="login-dialog">
           <div className="header-top university-header">
             <img 
-              src="/src/assets/logo-uandes.png" 
+              src="/assets/logo-uandes.png" 
               alt="Universidad de los Andes"
               className="uandes-logo"
             />
