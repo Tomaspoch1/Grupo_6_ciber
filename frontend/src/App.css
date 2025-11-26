@@ -741,21 +741,3 @@
     display: none;
   }
 }
-
-.university-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 10px;
-}
-
-.uandes-logo {
-  height: 36px;
-}
-
-.uandes-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: white;
-  letter-spacing: 0.5px;
-}
