@@ -14,12 +14,12 @@
   }
 
 .login-dialog {
-  max-width: 560px;
+  max-width: 700px;
   width: 100%;
   margin: 0 auto;
   background-color: #141414;
   border-radius: 30px;
-  padding: 40px 40px 36px;
+  padding: 48px 48px 40px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -189,10 +189,10 @@
 }
 
 .page-footer {
-  max-width: 560px;
+  max-width: 700px;
   width: 100%;
   margin: 0 auto;
-  padding: 24px 40px;
+  padding: 24px 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -237,6 +237,7 @@
     overflow-x: hidden;
   }
 
+  
   .login-dialog {
     width: 100%;
     border-radius: 0;
@@ -401,6 +402,11 @@
 
   .mobile-next-btn:active {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Ocultar vista de escritorio en móvil */
+  .password-desktop-content {
+    display: none;
   }
 
   /* Vista de contraseña móvil */
@@ -738,8 +744,153 @@
     display: none;
   }
 
+  /* Ocultar vista móvil de contraseña en escritorio */
   .password-mobile-content {
     display: none;
+  }
+
+  /* Vista de contraseña en escritorio - layout de dos columnas */
+  .password-desktop-content {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    margin-top: 24px;
+    margin-bottom: 32px;
+    align-items: flex-start;
+  }
+
+  .password-desktop-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-top: 8px;
+  }
+
+  .password-account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .password-account-name {
+    font-size: 16px;
+    font-weight: 400;
+    color: #fff;
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  .password-account-email-field {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: transparent;
+    border: 1px solid #5f6368;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+    width: fit-content;
+  }
+
+  .password-account-email-field:hover {
+    border-color: #8ab4f8;
+    background-color: rgba(138, 180, 248, 0.1);
+  }
+
+  .password-account-email {
+    font-size: 14px;
+    color: #e8eaed;
+    font-family: "Google Sans", "Noto Sans", "Roboto", "Arial", sans-serif;
+  }
+
+  .password-account-email-field .dropdown-arrow path {
+    fill: #9aa0a6;
+  }
+
+  .password-account-email-field:hover .dropdown-arrow path {
+    fill: #8ab4f8;
+  }
+
+  .password-desktop-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .password-desktop-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .password-label {
+    font-size: 14px;
+    color: #e8eaed;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .password-desktop-input {
+    width: 100%;
+    padding: 13px 15px;
+    background-color: transparent;
+    border: 1px solid #5f6368;
+    border-radius: 6px;
+    color: #e8eaed;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    font-family: "Google Sans", "Noto Sans", "Roboto", "Arial", sans-serif;
+  }
+
+  .password-desktop-input:focus {
+    outline: none;
+    border-color: #8ab4f8;
+  }
+
+  .show-password-desktop-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .password-desktop-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .try-another-way-link {
+    color: #8ab4f8;
+    font-size: 14px;
+    text-decoration: none;
+    font-family: "Google Sans", "Noto Sans", "Roboto", "Arial", sans-serif;
+  }
+
+  .try-another-way-link:hover {
+    text-decoration: underline;
+  }
+
+  .password-desktop-next-btn {
+    background-color: #8ab4f8;
+    color: #000;
+    border: none;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 30px;
+    font-family: "Google Sans", "Noto Sans", "Roboto", "Arial", sans-serif;
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+
+  .password-desktop-next-btn:hover {
+    background-color: #6ea3f5;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
   .password-mobile-footer {

