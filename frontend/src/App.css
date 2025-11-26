@@ -234,12 +234,13 @@
     min-height: 100vh;
     gap: 0;
     background-color: #000;
+    overflow-x: hidden;
   }
 
   .login-dialog {
     width: 100%;
     border-radius: 0;
-    padding: 24px 24px 0;
+    padding: 24px;
     min-height: calc(100vh - 60px);
     display: flex;
     flex-direction: column;
@@ -249,6 +250,7 @@
     box-shadow: none;
     justify-content: flex-start;
     flex: 1;
+    padding-bottom: 24px;
   }
 
   .header-top {
@@ -293,7 +295,9 @@
     flex-direction: column;
     gap: 16px;
     margin-top: 0;
+    margin-bottom: 24px;
     width: 100%;
+    flex: 1;
   }
 
   /* Ocultar contenido móvil cuando se muestra la vista de contraseña */
@@ -331,14 +335,13 @@
   }
 
   .mobile-forgot-link {
-    color: #e8eaed;
+    color: #8ab4f8;
     font-size: 14px;
     text-decoration: none;
     margin-top: 4px;
   }
 
   .mobile-forgot-link:hover {
-    color: #8ab4f8;
     text-decoration: underline;
   }
 
@@ -356,12 +359,10 @@
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
-    padding: 16px 24px;
+    padding: 16px 0;
     border-top: none;
     box-sizing: border-box;
-    margin-left: -24px;
-    margin-right: -24px;
-    width: calc(100% + 48px);
+    width: 100%;
   }
 
   .mobile-create-account-link {
@@ -408,7 +409,9 @@
     flex-direction: column;
     gap: 16px;
     margin-top: 0;
+    margin-bottom: 24px;
     width: 100%;
+    flex: 1;
   }
 
   .password-email-container {
@@ -559,12 +562,14 @@
   .page-footer {
     width: 100%;
     margin: 0;
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
     flex-direction: row;
     position: relative;
+    flex-shrink: 0;
   }
 
   .language-selector {
