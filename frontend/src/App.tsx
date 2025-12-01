@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 interface User {
@@ -10,19 +10,6 @@ interface User {
 
 const API_URL = import.meta.env.VITE_API_URL
 
-
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
-  
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768)
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
-  
-  return isMobile
-}
-
 function App() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -33,7 +20,6 @@ function App() {
   const [adminKey, setAdminKey] = useState('')
   const [users, setUsers] = useState<User[]>([])
   const [message, setMessage] = useState('') // para mostrar confirmación o error
-  const isMobile = useIsMobile()
   
   // === función que envía el correo al backend Flask ===
   const handleEmailSubmit = async () => {
